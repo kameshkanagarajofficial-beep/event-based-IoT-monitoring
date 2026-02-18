@@ -1,38 +1,60 @@
-.App {
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #ffffff;
+}
+
+.dashboard {
   text-align: center;
+  padding: 40px;
+  background-color: aqua;
+  color: #ffffff;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.card {
+  background: #1e2a38;
+  padding: 30px;
+  border-radius: 15px;
+  width: 600px;
+  margin: auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+h1 {
+  color: #00d9ff;
+  margin-bottom: 20px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+h2 {
+  margin: 10px 0;
+}
+
+.alert {
+  color: #ff4d4d;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.section {
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px solid #3a4a5a;
+}
+
+.metric {
+  font-size: 18px;
+  margin: 8px 0;
+}
+
+.highlight {
+  color: #00ffb3;
+  font-weight: bold;
+}
+
+.chart-container {
+  margin-top: 30px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }

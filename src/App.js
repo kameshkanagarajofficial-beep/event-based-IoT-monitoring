@@ -1,41 +1,101 @@
 import React, { useState, useEffect } from "react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 
 function App() {
   const [currentValue, setCurrentValue] = useState(50);
   const [previousValue, setPreviousValue] = useState(50);
-  const [transmittedData, setTransmittedData] = useState([]);
-  const threshold = 5;
 
+  const [continuousCount, setContinuousCount] = useState(0);
+  const [eventCount, setEventCount] = useState(0);
+  const [alertMessage, setAlertMessage] = useState("");
+
+  const threshold = 5;
+  const energyPerTransmission = 0.5;
+
+  // Sensor simulation (runs every 2 seconds)
   useEffect(() => {
     const interval = setInterval(() => {
       const newValue = Math.floor(Math.random() * 100);
       setCurrentValue(newValue);
+
+      // Continuous mode always transmits
+      setContinuousCount(prev => prev + 1);
+
     }, 2000);
 
     return () => clearInterval(interval);
   }, []);
 
+  // Event-based + Abnormal detection logic
   useEffect(() => {
-    if (Math.abs(currentValue - previousValue) > threshold) {
-      setTransmittedData(prev => [...prev, currentValue]);
+
+    // Abnormal detection
+    if (currentValue > 90) {
+      setAlertMessage("⚠️ Critical Alert: Sensor value exceeded safe limit!");
+      setEventCount(prev => prev + 1);
       setPreviousValue(currentValue);
+      return;
     }
+
+    // Normal event-based detection
+    if (Math.abs(currentValue - previousValue) > threshold) {
+      setEventCount(prev => prev + 1);
+      setPreviousValue(currentValue);
+      setAlertMessage("");
+    }
+
   }, [currentValue]);
 
-  return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Event-Based IoT Monitoring</h1>
-      <h2>Current Sensor Value: {currentValue}</h2>
-      <h3>Threshold: {threshold}</h3>
+  const reductionPercentage =
+    continuousCount > 0
+      ? (((continuousCount - eventCount) / continuousCount) * 100).toFixed(2)
+      : 0;
 
-      <h3>Transmitted Data:</h3>
-      <ul>
-        {transmittedData.map((data, index) => (
-          <li key={index}>{data}</li>
-        ))}
-      </ul>
+  const continuousEnergy = (continuousCount * energyPerTransmission).toFixed(2);
+  const eventEnergy = (eventCount * energyPerTransmission).toFixed(2);
+  const energySaved = (continuousEnergy - eventEnergy).toFixed(2);
+  const chartData = [
+  {
+    name: "Transmissions",
+    Continuous: continuousCount,
+    EventBased: eventCount
+  }
+];
+
+  return (
+  <div className="dashboard">
+    <div className="card">
+      <h1>Event-Based IoT Performance Analysis</h1>
+
+      <h2>Current Sensor Value: {currentValue}</h2>
+
+      {alertMessage && (
+        <div className="alert">{alertMessage}</div>
+      )}
+
+      <div className="section">
+        <div className="metric">Continuous Mode Transmissions: {continuousCount}</div>
+        <div className="metric">Event-Based Transmissions: {eventCount}</div>
+        <div className="metric highlight">
+          Transmission Reduction: {reductionPercentage}%
+        </div>
+      </div>
+
+      <div className="section">
+        <div className="metric">Continuous Energy Used: {continuousEnergy} units</div>
+        <div className="metric">Event-Based Energy Used: {eventEnergy} units</div>
+        <div className="metric highlight">
+          Energy Saved: {energySaved} units
+        </div>
+      </div>
+
+      <div className="chart-container">
+        {/* Your BarChart stays here */}
+      </div>
+
     </div>
-  );
+  </div>
+);
 }
 
 export default App;
